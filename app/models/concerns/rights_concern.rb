@@ -7,9 +7,29 @@
 module RightsConcern
   extend ActiveSupport::Concern
 
+  # Returns the rights as strings
+  # @return [Array<string>]
+  # @example
+  #   7 => ["search", "manage projects", "invite users"]
+  def rights
+    decode(rights_code)
+  end
+
+  # Set rights_code from an array of rights
+  # @params value [Array<string>] a list of rights
+  # @return [int]
+  # @example
+  #   ["search", "manage projects", "invite users"] => 7
+  def rights=(value)
+    self.rights_code = encode(value)
+  end
+
+  private
+
   # List of rights, used as key to encode and decode
   # @return [Array<string>]
-  def list
+  # :nocov:
+  def key_list
     %w[
       right_0
       right_1
@@ -19,30 +39,22 @@ module RightsConcern
       right_5
     ].freeze
   end
+  # :nocov:
 
-  # Returns an code from an array
-  # @return [int]
-  # @example
-  #   ["search", "manage projects", "invite users"] #=> 7
-  def rights
-    # for each option, check if the corresponding column is 1
+  def decode(code)
+    # for each elt, check if the corresponding column is 1
     # example with index == 2
-    # 0101 -> 0101 >> 2 == 01 -> 01 % 2 == 1 -> add option
+    # 0101 -> 0101 >> 2 == 01 -> 01 % 2 == 1 -> add elt
     # 1011 -> 0101 >> 2 == 10 -> 10 % 2 == 0 -> continue
-    list.select.with_index { |_, i| (rights_code >> i).odd? }
+    key_list.select.with_index { |_, i| (code >> i).odd? }
   end
 
-  # Save rights (integer) from an array of strings
-  # @params value [Array<string>] a list of rights
-  # @return [int]
-  # @example
-  #   ["search", "manage projects", "invite users"] => 7
-  def rights=(value)
-    # sum right left shifted by positions in #list
+  def encode(elts)
+    # sum elt left shifted by positions in #key_list
     # examples:
-    # index of right in #list == 0 -> add 1 << 0 == 1
-    # index of right in #list == 1 -> add 1 << 1 == 10 (2 in base10)
-    # index of right in #list == 2 -> add 1 << 2 == 100 (4 in base10)
-    self.rights_code = value.map { |right| 1 << (list.index(right)) }.sum
+    # index of elt in #key_list == 0 -> add 1 << 0 == 1
+    # index of elt in #key_list == 1 -> add 1 << 1 == 10 (2 in base10)
+    # index of elt in #key_list == 2 -> add 1 << 2 == 100 (4 in base10)
+    elts.map { |elt| 1 << (key_list.index(elt)) }.sum
   end
 end
