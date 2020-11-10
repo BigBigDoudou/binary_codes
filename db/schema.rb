@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 2020_10_31_143446) do
 
   create_table "roles", force: :cascade do |t|
-    t.integer "rights"
+    t.integer "rights_code"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2020_10_31_143446) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.integer "rights", default: 0
+    t.integer "rights_code", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

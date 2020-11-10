@@ -3,7 +3,7 @@
 class CreateRoles < ActiveRecord::Migration[6.0]
   def change
     create_table :roles do |t|
-      t.integer :rights
+      t.integer :rights_code
 
       t.timestamps
     end
