@@ -30,14 +30,7 @@ module RightsConcern
   # @return [Array<string>]
   # :nocov:
   def key_list
-    %w[
-      right_0
-      right_1
-      right_2
-      right_3
-      right_4
-      right_5
-    ].freeze
+    %w[alfa bravo charlie delta echo foxtrot golf].freeze
   end
   # :nocov:
 

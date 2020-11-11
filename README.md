@@ -74,3 +74,29 @@ user.full_rights # => ['alfa', 'bravo', 'charlie', 'echo']
 user.can?('bravo') # => true
 user.can?('delta') # => false
 ```
+
+## Benchmark
+
+The `decode` system is heavier with binary, especially with a large `key_list`.
+
+```
+encoding ---
+  0.080456   0.000585   0.081041 (  0.081114)
+  0.075620   0.000081   0.075701 (  0.075731)
+  -> Encoding with binary takes 0.07 more time than the 'array to string' system
+
+decoding ---
+  0.103538   0.000048   0.103586 (  0.103649)
+  0.046664   0.000000   0.046664 (  0.046668)
+  -> Decoding with binary takes 1.22 more time than the 'string to array' system
+
+union ---
+  0.097521   0.000079   0.097600 (  0.097660)
+  0.149942   0.000000   0.149942 (  0.149981)
+  -> Union with binary takes -0.35 more time than with arrays
+
+include ---
+  0.039531   0.000000   0.039531 (  0.039589)
+  0.060483   0.000000   0.060483 (  0.060497)
+  -> Checking inclusion with binary takes -0.35 more time than with arrays
+  ```
